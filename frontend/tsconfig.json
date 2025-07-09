@@ -1,0 +1,67 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "useDefineForClassFields": true,
+    "lib": [
+      "ES2020",
+      "DOM",
+      "DOM.Iterable"
+    ],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "jsx": "react-jsx",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "allowImportingTsExtensions": true,
+    "skipLibCheck": true,
+    // ✅ Absolute Imports
+    "baseUrl": "./src",
+    "paths": {
+      "@components/*": [
+        "components/*"
+      ],
+      "@layout/*": [
+        "components/layout/*"
+      ],
+      "@dashboard/*": [
+        "components/dashboard/*"
+      ],
+      "@common/*": [
+        "components/common/*"
+      ],
+      "@pages/*": [
+        "pages/*"
+      ],
+      "@hooks/*": [
+        "hooks/*"
+      ],
+      "@utils/*": [
+        "utils/*"
+      ],
+      "@theme/*": [
+        "theme/*"
+      ],
+      "@types/*": [
+        "types/*"
+      ]
+    },
+    // ✅ Strict TypeScript Settings
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "strictBindCallApply": true,
+    "strictPropertyInitialization": true,
+    "noImplicitThis": true,
+    "alwaysStrict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": [
+    "src"
+  ]
+}
