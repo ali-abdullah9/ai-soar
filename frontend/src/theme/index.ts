@@ -1,42 +1,26 @@
-import { extendTheme, type ThemeConfig } from '@chakra-ui/react';
-import { mode } from '@chakra-ui/theme-tools';
+import { extendTheme, type ThemeConfig, type StyleFunctionProps } from '@chakra-ui/react';
 import colors from './colors';
 import components from './components';
 
 const config: ThemeConfig = {
-  initialColorMode: 'dark',
+  initialColorMode: 'system',
   useSystemColorMode: true,
 };
 
 const styles = {
-  global: (props: Record<string, any>) => ({
+  global: (props: StyleFunctionProps) => ({
     body: {
-      bg: mode('gray.50', 'gray.900')(props),
-      color: mode('gray.800', 'whiteAlpha.900')(props),
-      transition: 'background-color 0.2s ease-in-out',
+      bg: props.colorMode === 'dark' ? 'gray.900' : 'gray.50',
+      color: props.colorMode === 'dark' ? 'white' : 'gray.800',
     },
   }),
 };
 
-const breakpoints = {
-  sm: '640px',
-  md: '768px',
-  lg: '1024px',
-  xl: '1280px',
-};
-
-const fonts = {
-  heading: `'Inter', sans-serif`,
-  body: `'Inter', sans-serif`,
-};
-
 const theme = extendTheme({
   config,
+  styles,
   colors,
   components,
-  styles,
-  breakpoints,
-  fonts,
 });
 
 export default theme;

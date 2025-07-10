@@ -1,57 +1,35 @@
 // src/pages/Dashboard.tsx
 
-import {
-  Box,
-  SimpleGrid,
-  Heading,
-  Text,
-  useColorModeValue,
-} from '@chakra-ui/react';
-import { API_BASE_URL, ENV } from '@utils/constants';
+import React from 'react';
+import { Container, VStack, Box, Heading, Text, Divider, useColorModeValue } from '@chakra-ui/react';
+import DashboardGrid from '../components/dashboard/DashboardGrid';
+import { FiUsers, FiAlertTriangle, FiZap, FiActivity } from 'react-icons/fi';
 
-console.log('API Base URL:', API_BASE_URL);
-console.log('Environment:', ENV);
-
-const stats = [
-  { label: 'Active Threats', value: 12 },
-  { label: 'Open Incidents', value: 5 },
-  { label: 'Automations Run Today', value: 27 },
-  { label: 'Users Online', value: 3 },
+const statsData = [
+  { title: 'Active Users', value: '1,247', change: 5.2, icon: <FiUsers />, color: 'cyber.500' },
+  { title: 'Security Alerts', value: '23', change: -12.3, icon: <FiAlertTriangle />, color: 'red.500' },
+  { title: 'Automation Runs', value: '892', change: 8.1, icon: <FiZap />, color: 'green.500' },
+  { title: 'System Health', value: '98.7%', change: 2.1, icon: <FiActivity />, color: 'blue.500' },
 ];
 
-const Dashboard = () => {
-  const cardBg = useColorModeValue('white', 'gray.800');
-  const cardBorder = useColorModeValue('gray.200', 'gray.700');
-
+const Dashboard: React.FC = () => {
   return (
-    <Box>
-      <Heading mb={6} size="lg">
-        AI-SOAR Security Dashboard
-      </Heading>
-      <SimpleGrid columns={{ base: 1, sm: 2, md: 4 }} spacing={6}>
-        {stats.map(stat => (
-          <Box
-            key={stat.label}
-            bg={cardBg}
-            border="1px solid"
-            borderColor={cardBorder}
-            borderRadius="lg"
-            p={6}
-            boxShadow="md"
-            textAlign="center"
-            transition="box-shadow 0.2s"
-            _hover={{ boxShadow: 'xl' }}
-          >
-            <Text fontSize="2xl" fontWeight="bold" color="primary.500">
-              {stat.value}
-            </Text>
-            <Text fontSize="md" color={useColorModeValue('gray.600', 'gray.300')}>
-              {stat.label}
-            </Text>
-          </Box>
-        ))}
-      </SimpleGrid>
-    </Box>
+    <Container maxW="full" p={6}>
+      <VStack spacing={6} align="stretch">
+        <Box>
+          <Heading size="lg" mb={2}>
+            Security Dashboard
+          </Heading>
+          <Text color={useColorModeValue('gray.600', 'gray.400')}>
+            Monitor your security posture and automation workflows
+          </Text>
+        </Box>
+
+        <Divider />
+
+        <DashboardGrid statsData={statsData} />
+      </VStack>
+    </Container>
   );
 };
 

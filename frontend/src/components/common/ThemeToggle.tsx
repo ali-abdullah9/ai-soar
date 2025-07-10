@@ -1,19 +1,31 @@
-import { IconButton, useColorMode, useColorModeValue } from '@chakra-ui/react';
-import { MoonIcon, SunIcon } from '@chakra-ui/icons';
+import React, { useEffect } from 'react';
+import { IconButton, useColorMode } from '@chakra-ui/react';
+import { SunIcon, MoonIcon } from '@chakra-ui/icons';
+import { motion } from 'framer-motion';
 
-const ThemeToggle = () => {
+// Lazy load Framer Motion
+const MotionIconButton = motion(IconButton);
+
+const ThemeToggle: React.FC = () => {
   const { colorMode, toggleColorMode } = useColorMode();
-  const icon = useColorModeValue(<MoonIcon />, <SunIcon />);
-  const label = `Switch to ${colorMode === 'light' ? 'dark' : 'light'} mode`;
+
+  useEffect(() => {
+    const metaThemeColor = document.querySelector('meta[name="theme-color"]');
+    if (metaThemeColor) {
+      metaThemeColor.setAttribute('content', colorMode === 'light' ? '#f7f9fc' : '#1a202c');
+    }
+  }, [colorMode]);
 
   return (
-    <IconButton
-      aria-label={label}
-      icon={icon}
+    <MotionIconButton
+      aria-label="Toggle theme"
+      role="button"
+      icon={colorMode === 'light' ? <MoonIcon /> : <SunIcon />}
       onClick={toggleColorMode}
+      whileHover={{ scale: 1.1 }}
+      whileTap={{ scale: 0.9 }}
       variant="ghost"
-      size="md"
-      fontSize="xl"
+      size="lg"
     />
   );
 };

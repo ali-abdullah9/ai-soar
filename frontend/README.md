@@ -67,3 +67,40 @@ export default tseslint.config([
   },
 ])
 ```
+
+## Project Setup
+
+### Installation
+1. Clone the repository.
+2. Run `npm install` to install dependencies.
+
+### Development
+- Start the development server: `npm run dev`
+- Lint the code: `npm run lint`
+
+### Build
+- Build the project: `npm run build`
+
+### Features
+- React 18 with TypeScript
+- Chakra UI for styling
+- Framer Motion for animations
+- Fully responsive design
+- Dark/light theme support
+
+### Folder Structure
+```
+frontend/src/
+├── components/
+│   ├── layout/
+│   ├── dashboard/
+│   └── common/
+├── pages/
+├── hooks/
+├── types/
+├── theme/
+└── utils/
+```
+
+### Testing
+- Run tests: `npm test`

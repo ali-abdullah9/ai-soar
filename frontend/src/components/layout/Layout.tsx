@@ -1,22 +1,34 @@
-import type { ReactNode } from 'react';
-import { Box, Flex } from '@chakra-ui/react';
+import React from 'react';
+import { Flex, Box, useColorModeValue } from '@chakra-ui/react';
 import Header from './Header';
 import Sidebar from './Sidebar';
+import { useDisclosure } from '@chakra-ui/react';
 
 interface LayoutProps {
-  children: ReactNode;
+  children: React.ReactNode;
 }
 
-const Layout = ({ children }: LayoutProps) => (
-  <Flex minH="100vh" bg="gray.50" _dark={{ bg: 'gray.900' }}>
-    <Sidebar />
-    <Box flex="1" ml={{ base: 0, md: '220px' }} transition="margin 0.2s">
-      <Header />
-      <Box as="main" px={{ base: 4, md: 8 }} py={6}>
-        {children}
-      </Box>
-    </Box>
-  </Flex>
-);
+const Layout: React.FC<LayoutProps> = ({ children }) => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const bgColor = useColorModeValue('gray.50', 'gray.900');
+  const sidebarBg = useColorModeValue('gray.100', 'gray.800');
+
+  return (
+    <Flex direction="column" minH="100vh" bg={bgColor} color={useColorModeValue('gray.800', 'white')}>
+      {/* Header */}
+      <Header onSidebarOpen={onOpen} />
+
+      <Flex flex="1" direction="row">
+        {/* Sidebar */}
+        <Sidebar isOpen={isOpen} onClose={onClose} bg={sidebarBg} />
+
+        {/* Main Content Area */}
+        <Box flex="1" p={6} overflow="auto">
+          {children}
+        </Box>
+      </Flex>
+    </Flex>
+  );
+};
 
 export default Layout;

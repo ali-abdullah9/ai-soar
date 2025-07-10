@@ -1,110 +1,112 @@
-import { FC, useState } from 'react';
+import React from 'react';
 import {
   Box,
-  Flex,
-  IconButton,
   VStack,
   Text,
+  Button,
   useColorModeValue,
-  Collapse,
-  useBreakpointValue,
+  Drawer,
+  DrawerOverlay,
+  DrawerContent,
+  DrawerHeader,
+  DrawerBody,
+  DrawerCloseButton,
+  Show,
+  Hide,
+  HStack,
+  Heading,
 } from '@chakra-ui/react';
 import {
   FiHome,
-  FiAlertCircle,
+  FiEye,
+  FiAlertTriangle,
+  FiZap,
+  FiUsers,
+  FiServer,
   FiSettings,
-  FiChevronLeft,
-  FiChevronRight,
+  FiShield,
 } from 'react-icons/fi';
-import { NavLink, useLocation } from 'react-router-dom';
 
-type NavItem = {
-  label: string;
-  icon: React.ElementType;
-  path: string;
-};
+interface SidebarProps {
+  isOpen?: boolean;
+  onClose?: () => void;
+}
 
-const navItems: NavItem[] = [
-  { label: 'Dashboard', icon: FiHome, path: '/' },
-  { label: 'Alerts', icon: FiAlertCircle, path: '/alerts' },
-  { label: 'Settings', icon: FiSettings, path: '/settings' },
-];
+const SidebarContent: React.FC<SidebarProps> = ({ onClose }) => {
+  const sidebarBg = useColorModeValue('white', 'dark.800');
+  const borderColor = useColorModeValue('gray.200', 'dark.700');
+  const hoverBg = useColorModeValue('gray.100', 'whiteAlpha.100');
 
-const Sidebar: FC = () => {
-  const [collapsed, setCollapsed] = useState(false);
-  const location = useLocation();
-  const bg = useColorModeValue('white', 'gray.900');
-  const borderColor = useColorModeValue('gray.200', 'gray.700');
-  const isMobile = useBreakpointValue({ base: true, md: false });
-
-  // Collapse sidebar by default on mobile
-  const isCollapsed = isMobile ? true : collapsed;
+  const menuItems = [
+    { icon: <FiHome />, label: 'Dashboard', active: true },
+    { icon: <FiEye />, label: 'Monitoring' },
+    { icon: <FiAlertTriangle />, label: 'Alerts' },
+    { icon: <FiZap />, label: 'Automation' },
+    { icon: <FiUsers />, label: 'Users' },
+    { icon: <FiServer />, label: 'Assets' },
+    { icon: <FiSettings />, label: 'Settings' },
+  ];
 
   return (
     <Box
-      as="nav"
-      position="fixed"
-      left={0}
-      top={0}
-      h="100vh"
-      zIndex={20}
-      bg={bg}
-      borderRight="1px solid"
-      borderColor={borderColor}
-      w={isCollapsed ? '60px' : { base: '60px', md: '220px' }}
-      transition="width 0.2s"
-      boxShadow="md"
-      display={{ base: 'none', md: 'block' }}
+      bg={sidebarBg}
+      borderRightWidth="1px"
+      borderRightColor={borderColor}
+      w="240px"
+      h="full"
+      overflowY="auto"
     >
-      <Flex
-        direction="column"
-        h="full"
-        justify="space-between"
-        py={4}
-        px={isCollapsed ? 2 : 4}
-      >
-        <VStack spacing={2} align="stretch" flex={1}>
-          {navItems.map(item => {
-            const isActive = location.pathname === item.path;
-            return (
-              <NavLink key={item.path} to={item.path} style={{ textDecoration: 'none' }}>
-                {({ isActive: navIsActive }) => (
-                  <Flex
-                    align="center"
-                    p={2}
-                    borderRadius="md"
-                    role="group"
-                    cursor="pointer"
-                    bg={navIsActive || isActive ? useColorModeValue('primary.100', 'primary.700') : 'transparent'}
-                    color={navIsActive || isActive ? useColorModeValue('primary.700', 'primary.100') : undefined}
-                    _hover={{
-                      bg: useColorModeValue('primary.50', 'gray.700'),
-                      color: useColorModeValue('primary.700', 'primary.100'),
-                    }}
-                    transition="all 0.15s"
-                  >
-                    <Box as={item.icon} fontSize="xl" mr={isCollapsed ? 0 : 3} />
-                    <Collapse in={!isCollapsed} animateOpacity style={{ width: '100%' }}>
-                      <Text fontWeight="medium">{item.label}</Text>
-                    </Collapse>
-                  </Flex>
-                )}
-              </NavLink>
-            );
-          })}
-        </VStack>
-        {/* Collapse/Expand Button */}
-        <IconButton
-          aria-label={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-          icon={isCollapsed ? <FiChevronRight /> : <FiChevronLeft />}
-          size="sm"
-          variant="ghost"
-          alignSelf={isCollapsed ? 'center' : 'flex-end'}
-          onClick={() => setCollapsed(c => !c)}
-          mt={2}
-        />
-      </Flex>
+      <VStack spacing={1} align="stretch" p={4}>
+        <Text fontSize="xs" fontWeight="bold" color="gray.500" mb={2} px={3}>
+          MAIN MENU
+        </Text>
+        {menuItems.map((item, index) => (
+          <Button
+            key={index}
+            leftIcon={item.icon}
+            variant={item.active ? 'solid' : 'ghost'}
+            colorScheme={item.active ? 'cyber' : 'gray'}
+            justifyContent="flex-start"
+            size="sm"
+            onClick={onClose}
+            _hover={{ bg: hoverBg }}
+          >
+            {item.label}
+          </Button>
+        ))}
+      </VStack>
     </Box>
+  );
+};
+
+const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
+  return (
+    <>
+      <Show above="lg">
+        <SidebarContent />
+      </Show>
+      <Hide above="lg">
+        <Drawer isOpen={isOpen || false} placement="left" onClose={onClose || (() => {})}>
+          <DrawerOverlay />
+          <DrawerContent>
+            <DrawerCloseButton />
+            <DrawerHeader>
+              <HStack spacing={2}>
+                <Box color="cyber.500" fontSize="24px">
+                  <FiShield />
+                </Box>
+                <Heading size="md" color="cyber.500">
+                  AI-SOAR
+                </Heading>
+              </HStack>
+            </DrawerHeader>
+            <DrawerBody p={0}>
+              <SidebarContent onClose={onClose} />
+            </DrawerBody>
+          </DrawerContent>
+        </Drawer>
+      </Hide>
+    </>
   );
 };
 

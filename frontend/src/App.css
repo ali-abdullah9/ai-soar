@@ -1,3 +1,64 @@
+/* Reset section spacing */
+section {
+  margin: 0;
+  padding: 0;
+}
+
+/* Responsive typography scaling */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: bold;
+  line-height: 1.2;
+}
+
+html {
+  font-size: 16px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 18px;
+  }
+}
+
+@media (min-width: 1024px) {
+  html {
+    font-size: 20px;
+  }
+}
+
+/* Base styles for smooth transitions, shadows, and focus outlines */
+* {
+  transition: all 0.3s ease;
+  box-shadow: none;
+  outline: none;
+}
+
+*:focus {
+  outline: 2px solid #2196f3;
+}
+
+/* Improved scrollbar for dark/light themes */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--chakra-colors-gray-800);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--chakra-colors-gray-600);
+  border-radius: 4px;
+}
+
+body.light-mode ::-webkit-scrollbar-track {
+  background: var(--chakra-colors-gray-200);
+}
+
+body.light-mode ::-webkit-scrollbar-thumb {
+  background: var(--chakra-colors-gray-400);
+}
+
 #root {
   max-width: 1280px;
   margin: 0 auto;
