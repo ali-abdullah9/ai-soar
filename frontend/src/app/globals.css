@@ -1,26 +1,139 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --soar-darkest: #071e3d;
+    --soar-dark: #1f4287;
+    --soar-medium: #278ea5;
+    --soar-bright: #21e6c1;
+    --soar-accent: #33f9ff;
+  }
+
+  * {
+    @apply border-cyber-gray;
+  }
+
+  body {
+    @apply bg-cyber-black text-gray-100;
+    font-family: "Inter", system-ui, -apple-system, sans-serif;
+  }
+
+  /* Scrollbar Styling */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-cyber-gray;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-soar-medium rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-soar-bright;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer components {
+  .glass-morphism {
+    @apply backdrop-blur-xl bg-white/5 border border-white/10;
+  }
+
+  .neon-border {
+    @apply relative;
+    box-shadow: 0 0 10px rgba(33, 230, 193, 0.5),
+      inset 0 0 10px rgba(33, 230, 193, 0.1);
+  }
+
+  .cyber-card {
+    @apply glass-morphism rounded-xl p-6 relative overflow-hidden;
+    background: linear-gradient(
+      135deg,
+      rgba(7, 30, 61, 0.3) 0%,
+      rgba(31, 66, 135, 0.1) 100%
+    );
+  }
+
+  .threat-critical {
+    @apply text-red-400 bg-red-500/10 border-red-500/30;
+  }
+
+  .threat-high {
+    @apply text-orange-400 bg-orange-500/10 border-orange-500/30;
+  }
+
+  .threat-medium {
+    @apply text-yellow-400 bg-yellow-500/10 border-yellow-500/30;
+  }
+
+  .threat-low {
+    @apply text-soar-bright bg-soar-bright/10 border-soar-bright/30;
+  }
+
+  .scan-line {
+    @apply absolute left-0 right-0 h-px bg-gradient-to-r from-transparent via-soar-bright to-transparent opacity-50;
+  }
+}
+
+@layer utilities {
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-soar-medium to-soar-bright;
+  }
+
+  .animate-glow {
+    animation: glow 2s ease-in-out infinite alternate;
+  }
+  /* Scrollbar styling for LogStream */
+  .scrollbar-thin {
+    scrollbar-width: thin;
+  }
+
+  .scrollbar-thumb-soar-medium::-webkit-scrollbar-thumb {
+    background-color: #278ea5;
+    border-radius: 4px;
+  }
+
+  .scrollbar-track-cyber-gray::-webkit-scrollbar-track {
+    background-color: #1a1f2e;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  @keyframes glow {
+    from {
+      text-shadow: 0 0 10px rgba(33, 230, 193, 0.5);
+    }
+    to {
+      text-shadow: 0 0 20px rgba(33, 230, 193, 0.8),
+        0 0 30px rgba(33, 230, 193, 0.6);
+    }
+  }
+  @keyframes scan {
+    0% {
+      transform: translateY(-100%);
+    }
+    100% {
+      transform: translateY(100%);
+    }
+  }
+
+  @keyframes pulse-glow {
+    0%,
+    100% {
+      box-shadow: 0 0 20px rgba(33, 230, 193, 0.5);
+      transform: scale(1);
+    }
+    50% {
+      box-shadow: 0 0 40px rgba(33, 230, 193, 0.8);
+      transform: scale(1.02);
+    }
+  }
 }
