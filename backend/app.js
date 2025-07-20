@@ -6,11 +6,11 @@ const port = 5002;
 app.use(express.json());
 
 // FRONTEND URL
-const FRONTEND_API = "http://localhost:3000/receive-lo";
+const FRONTEND_API = "http://localhost:3000/receive-log";
 
 async function sendToFrontend(data) {
     try {
-        await axios.post("http://localhost:3000/", data);
+        await axios.post("http://localhost:3000/api/receive-log", data);
         console.log("✅ Forwarded log to frontend");
     } catch (err) {
         console.error("❌ Failed to send log to frontend:", err.message);
@@ -29,25 +29,42 @@ async function sendToFrontend(data) {
 //     // }
 
 //     // Forward the log to frontend
-//     await sendToFrontend(req.body);
+
+//     const modifiedLog = {
+//         ...req.body,            // spread existing keys
+//         type_log: "IDPS"    // add your custom key
+//     };
+    
+//     await sendToFrontend(modifiedLog);
 
 //     res.status(200).send("ok");
 // });
 
-app.post('/wazuh-log', async (req, res) => {
-    console.log("Received SEIM log");
+// app.post('/wazuh-siem', async (req, res) => {
+//     console.log("Received SEIM log");
 
-    // Forward to frontend
-    await sendToFrontend(req.body);
+//     // Forward to frontend
 
-    res.status(200).send("Log received SEIM");
-});
+//     const modifiedLog = {
+//         ...req.body,            // spread existing keys
+//         type_log: "SIEM"    // add your custom key
+//     };
+
+//     await sendToFrontend(modifiedLog);
+
+//     res.status(200).send("Log received SEIM");
+// });
 
 app.post('/firewall-log', async (req, res) => {
     console.log("Firewall log received================>:", req.body);
 
+    const modifiedLog = {
+        ...req.body,            // spread existing keys
+        type_log: "FIREWALL"    // add your custom key
+    };
+
     // Forward to frontend
-    await sendToFrontend(req.body);
+    await sendToFrontend(modifiedLog);
 
     res.status(200).send("Firewall log received");
 });
