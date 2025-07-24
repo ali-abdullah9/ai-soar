@@ -2,14 +2,13 @@ import { NextRequest, NextResponse } from "next/server";
 import fs from "fs";
 import path from "path";
 
-const LOG_DIR = path.join(process.cwd(), "logs");
+const LOG_DIR = path.join("frontend/public/logs");
 const LOG_FILE = path.join(LOG_DIR, "logs.json");
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     console.log("📥 Received log:", body);
-
     // Ensure logs directory exists
     if (!fs.existsSync(LOG_DIR)) {
       fs.mkdirSync(LOG_DIR, { recursive: true });

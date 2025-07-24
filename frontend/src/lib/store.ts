@@ -1,82 +1,56 @@
-// frontend/src/lib/store.ts
+// lib/store.ts - Updated to remove mock data references
+
+// This file is now mostly replaced by realLogsService.ts
+// You can either delete this file or keep it for any other state management needs
+
+// The main store functionality has been moved to realLogsService.ts
+// which provides:
+// - useLogStore() - main store with real data
+// - useFilteredLogs() - filtered logs selector
+// - useRealLogs() - React hook for real logs
+
+// If you have any other global state needs (like UI state, settings, etc.)
+// you can add them here:
+
 import { create } from 'zustand';
-import { SecurityLog, DashboardMetrics } from './types';
-import { mockLogs } from './mockData';
 
-interface LogStore {
-  logs: SecurityLog[];
-  metrics: DashboardMetrics | null;
-  filter: {
-    severity: string | null;
-    source: string | null;
-    searchTerm: string;
-  };
+interface UIStore {
+  sidebarCollapsed: boolean;
+  theme: 'dark' | 'light';
+  notifications: Array<{
+    id: string;
+    message: string;
+    type: 'success' | 'error' | 'warning' | 'info';
+    timestamp: Date;
+  }>;
   
-  setFilter: (filter: Partial<LogStore['filter']>) => void;
-  addLog: (log: SecurityLog) => void;
-  clearLogs: () => void;
+  setSidebarCollapsed: (collapsed: boolean) => void;
+  setTheme: (theme: 'dark' | 'light') => void;
+  addNotification: (notification: Omit<UIStore['notifications'][0], 'id' | 'timestamp'>) => void;
+  removeNotification: (id: string) => void;
 }
 
-export const useLogStore = create<LogStore>((set) => ({
-  // Initialize with mock data
-  logs: mockLogs,
-  metrics: generateMetricsFromLogs(mockLogs),
-  filter: {
-    severity: null,
-    source: null,
-    searchTerm: '',
-  },
+export const useUIStore = create<UIStore>((set) => ({
+  sidebarCollapsed: false,
+  theme: 'dark',
+  notifications: [],
 
-  setFilter: (newFilter) => set((state) => ({
-    filter: { ...state.filter, ...newFilter }
+  setSidebarCollapsed: (collapsed) => set({ sidebarCollapsed: collapsed }),
+  
+  setTheme: (theme) => set({ theme }),
+  
+  addNotification: (notification) => set((state) => ({
+    notifications: [
+      ...state.notifications,
+      {
+        ...notification,
+        id: Math.random().toString(36).substr(2, 9),
+        timestamp: new Date(),
+      }
+    ]
   })),
-
-  addLog: (log) => set((state) => {
-    const newLogs = [...state.logs, log];
-    return {
-      logs: newLogs,
-      metrics: generateMetricsFromLogs(newLogs)
-    };
-  }),
-
-  clearLogs: () => set({ logs: [], metrics: null }),
-}));
-
-// Helper function to generate metrics from logs
-function generateMetricsFromLogs(logs: SecurityLog[]): DashboardMetrics {
-  const severityCounts = logs.reduce((acc, log) => {
-    acc[log.event.severity] = (acc[log.event.severity] || 0) + 1;
-    return acc;
-  }, {} as Record<string, number>);
-
-  const sourceCounts = logs.reduce((acc, log) => {
-    acc[log.source_type] = (acc[log.source_type] || 0) + 1;
-    return acc;
-  }, {} as Record<string, number>);
-
-  return {
-    totalAlerts: logs.length,
-    criticalAlerts: severityCounts.critical || 0,
-    blockedThreats: logs.filter(l => l.event.action === 'blocked').length,
-    averageResponseTime: 24.5,
-    alertsBySource: sourceCounts,
-    alertsBySeverity: severityCounts,
-    recentAlerts: logs.slice(-10),
-  };
-}
-
-// Selector hooks
-export const useFilteredLogs = () => {
-  const { logs, filter } = useLogStore();
   
-  return logs.filter(log => {
-    const matchesSearch = !filter.searchTerm || 
-      log.threat.name.toLowerCase().includes(filter.searchTerm.toLowerCase()) ||
-      log.source_product.toLowerCase().includes(filter.searchTerm.toLowerCase());
-    
-    const matchesSeverity = !filter.severity || log.event.severity === filter.severity;
-    const matchesSource = !filter.source || log.source_type === filter.source;
-    
-    return matchesSearch && matchesSeverity && matchesSource;
-  });
-};
+  removeNotification: (id) => set((state) => ({
+    notifications: state.notifications.filter(n => n.id !== id)
+  })),
+}));
